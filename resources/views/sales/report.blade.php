@@ -12,11 +12,11 @@
                             <th width="5%">SL</th>
                             <th width="15%">Customer</th>
                             <th width="10%">Phone</th>
-                            <th width="20%">Address</th>
+                            <th width="25%">Address</th>
                             <th width="10%">Total</th>
                             <th width="10%">Paid</th>
                             <th width="10%">Due</th>
-                            <th width="10%">action</th>
+                            <th width="7%">action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -31,12 +31,12 @@
                                 <td>{{$value['total'] - $value['paid']}}</td>
                                 <td>
                                     <a href="{{route('salesDetails',$value['sales_id'])}}">
-                                        <button><i class="fa fa-eye"></i></button>
+                                        <span><i class="fa fa-fw fa-eye"></i><span>
                                     </a>
                                     <a href="{{route('salesDetails',$value['sales_id'])}}">
-                                        <button><i class="fa fa-edit"></i></button>
+                                        <i class="fa fa-fw fa-edit"></i>
                                     </a>
-                                    <button id="deletebt" value="{{$value['sales_id']}}"><i class="fa fa-trash"></i></button>
+                                    <a href="" id="deletebt" value="{{$value['sales_id']}}"><i class="fa fa-fw fa-trash"></i></a>
                                 </td>
                             </tr>
                         @endforeach              
@@ -57,7 +57,7 @@
             // url: "{{ route('salesDelete', [':sales_id']) }}".replace(':sales_id', sales_id),
             method: 'DELETE',
             success: function(response) {
-                alert(response);
+                alert("response");
             }
         });
 
