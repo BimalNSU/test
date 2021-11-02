@@ -11,14 +11,14 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::get('/','SalesController@index');
 Route::get('sales/','SalesController@getSalesList');
-Route::get('sales/{sales_id}','SalesController@getSalesDetails')->name('salesDetails');
-Route::get('sales/{sales_id}/edit','SalesController@editPage')->name('salesEditPage');;
+Route::get('sales/{sales_id}','SalesController@getSalesView')->name('salesView');
+Route::get('sales/{sales_id}/edit','SalesController@getSalesEdit')->name('salesEdit');
 Route::POST('sales/','SalesController@create')->name('createSales');
 Route::PUT('sales/{sales_id}','SalesController@update')->name('salesUpdate');
 Route::DELETE('sales/{sales_id}','SalesController@delete')->name('salesDelete');
