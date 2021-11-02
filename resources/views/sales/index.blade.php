@@ -43,7 +43,7 @@
                             <label>Item</label>
                             <select class="form-control select2" style="width: 100%;">
                                 <option selected="selected">...</option>
-                                @foreach($product_list as $value)
+                                @foreach($data['product_list'] as $value)
                                     <option id ="{{$value['id']}}">{{$value['name']}}</option>
                                 @endforeach
                             </select>
@@ -76,23 +76,25 @@
                 <table id="sales_table" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th width="40%">Item</th>
-                            <th width="10%">price</th>
+                            <th width="50%">Item</th>
+                            <th width="15%">Price</th>
                             <th width="10%">Quantity</th>
-                            <th width="20%">total</th>
-                            <th width="5%">action</th>
+                            <th width="20%">Total</th>
+                            <th width="1%">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                     @if(@isset($data[1]))
+                    <?php $total =0;?>
                     @foreach($data[1] as $value)
                         <tr>
-                            <td id="{{$value['product_id']}}">{{$value['name']}}</td>
+                            <td>{{$value['name']}}</td>
                             <td>{{$value['sales_price']}}</td>
                             <td>{{$value['qt']}}</td>
                             <td>{{$value['sales_price']*$value['qt']}}</td>
-                            <td><button class = "deletebt">delete</button></td>
+                            <td><button id="{{$value['product_id']}}" class = "deletebt"><i class="fa fa-fw fa-trash"></i></button></td>
                         </tr>
+                        <?php $total += $value['sales_price'] * $value['qt'];?>
                     @endforeach
                     @endif             
                     </tbody>
@@ -110,7 +112,7 @@
                     <label for="inputTotal" class="col-sm-2 control-label">Total Price</label>
 
                     <div class="col-sm-5">
-                        <label id = "netTotal" class="form-control" >
+                        <label id = "netTotal" class="form-control" value ="{{$total ?? 0}}">
                     </div>
                 </div>
                 <div class="row form-group">
@@ -127,11 +129,19 @@
                         <label id="due" class="form-control" ></label>
                     </div>
                 </div>
-                <button class="pull-right" id ="createbt">Create</button>
+                @if(Route::current()->getName() == 'salesView')
+                    
+                @elseif(Route::current()->getName() == 'salesEdit')
+                    <button class="pull-right" id ="createbt">Update</button>
+                @else
+                    <button class="pull-right" id ="createbt">Create</button>
+                @endif
+                
             </div>
         </div>
     </div>
 </div>
+<p>{{Route::current()->getName()}}<p>
 @endsection
 @section('script_area')
 <script>
@@ -143,14 +153,18 @@
         let price = $("#product_price").val();
         let qt = $("#product_qt").val();
         let total = $("#product_total").text();
-  	    var row = '<tr>'+
+        //checking valid inputs
+        if(product_id != null && name != null && price != null && qt != null && total != null){
+            var row = '<tr>'+
                   '<td id="'+product_id+'">'+name+'</td>'+
                   '<td>'+price+'</td>'+
                   '<td>'+qt+'</td>'+
                   '<td>'+total+'</td>'+
-                  '<td> <button class='+'"deletebt"'+'>delete</button></td></tr>';
-        $("#sales_table tbody").append(row);   // add new item in table             
-        updateSalesSummary();
+                  '<td> <button id="'+product_id+'" class='+'"deletebt"'+'><i class="fa fa-fw fa-trash"></i></button></td></tr>';
+            $("#sales_table tbody").append(row);   // add new item in table             
+            updateSalesSummary();
+        }        
+  	    
     });
 
     //auto update due amount in each input in paid field
@@ -165,7 +179,8 @@
         jsonObject["customerPhone"] = $("#customerPhone").val();
         jsonObject["customerAddress"] = $("#customerAddress").val();
         jsonObject["paid"] = Number($("#inputPaid").val());
-        
+        let btName = $(this).text();
+            // if(btName = 'create')
         var sales_items = new Array();
         $("#sales_table tbody tr").each(function(){
             let row = $(this).find("td");            
@@ -189,6 +204,7 @@
         $("#sales_table > tbody").empty();
     });
     $("#sales_table tbody").on("click", ".deletebt", function() {
+        // deleted_product_ids.push($(this).attr('id'));
         //remove specific item(i.e row) from table
         $(this).closest("tr").remove();
         updateSalesSummary();

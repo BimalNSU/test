@@ -30,13 +30,15 @@
                                 <td>{{$value['paid']}}</td>
                                 <td>{{$value['total'] - $value['paid']}}</td>
                                 <td>
-                                    <a href="{{route('salesDetails',$value['sales_id'])}}">
+                                    <a href="{{route('salesView',$value['sales_id'])}}">
                                         <span><i class="fa fa-fw fa-eye"></i><span>
                                     </a>
-                                    <a href="{{route('salesDetails',$value['sales_id'])}}">
+                                    <a href="{{route('salesEdit',$value['sales_id'])}}">
                                         <i class="fa fa-fw fa-edit"></i>
                                     </a>
-                                    <a href="" id="deletebt" value="{{$value['sales_id']}}"><i class="fa fa-fw fa-trash"></i></a>
+                                    <a href="" id="deletebt" value="{{$value['sales_id']}}">
+                                        <i class="fa fa-fw fa-trash"></i>
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach              
@@ -57,7 +59,7 @@
             // url: "{{ route('salesDelete', [':sales_id']) }}".replace(':sales_id', sales_id),
             method: 'DELETE',
             success: function(response) {
-                alert("response");
+                alert(response);
             }
         });
 

@@ -13,10 +13,10 @@ class SalesController extends Controller
         // $result = DB::select($sqlQuery);
         // $data = json_encode($result);
         // $data = json_decode($data, true);   //store data in array
-        $product_list = $this->productList();
-        return view('sales.index',['product_list'=> $product_list]);
+        $data['product_list'] = $this->getProductList();
+        return view('sales.index',['data'=> $data]);
     }
-    public function productList(){
+    public function getProductList(){
         $sqlQuery = "SELECT id, name
             FROM Products";
         $result = DB::select($sqlQuery);
@@ -88,9 +88,18 @@ class SalesController extends Controller
         //     $data2 = $data2[0];
         // }
         $data = array($data, $data2);
-        $product_list = $this->productList();
-        return view('sales.index', ['data' => $data,'product_list' => $product_list]);
-        // dd( $data);
+        $data['product_list'] = $this->getProductList();
+        
+        // return view('sales.index', ['data' => $data,'product_list' => $product_list]);        
+        return $data;
+    }
+    public function getSalesView($sales_id){
+        $data = $this->getSalesDetails($sales_id);
+        return view('sales.index', ['data' => $data]);
+    }
+    public function getSalesEdit($sales_id){
+        $data = $this->getSalesDetails($sales_id);
+        return view('sales.index', ['data' => $data]);
     }
     public function editHelper($sales_data){
         $dynamic_query = "";        
