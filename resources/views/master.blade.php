@@ -91,8 +91,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="active"><a href="{{url('/')}}"><i class="fa fa-circle-o"></i> Product Add</a></li>
-            <li><a href="{{url('sales/')}}"><i class="fa fa-circle-o"></i> Product List</a></li>
+            <li class="active"><a href="{{url('products/create')}}"><i class="fa fa-circle-o"></i> Product Add</a></li>
+            <li><a href="{{url('products/')}}"><i class="fa fa-circle-o"></i> Product List</a></li>
           </ul>
         </li>
       </ul>
