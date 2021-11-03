@@ -8,15 +8,10 @@ use Illuminate\Support\Facades\DB;
 class SalesController extends Controller
 {
     public function index(){
-        // $sqlQuery = "SELECT id, name
-        //             FROM Products";
-        // $result = DB::select($sqlQuery);
-        // $data = json_encode($result);
-        // $data = json_decode($data, true);   //store data in array
-        $data['product_list'] = $this->getProductList();
+        $data['product_list'] = $this->getAllProductsId_n_Name();
         return view('sales.index',['data'=> $data]);
     }
-    public function getProductList(){
+    public function getAllProductsId_n_Name(){
         $sqlQuery = "SELECT id, name
             FROM Products";
         $result = DB::select($sqlQuery);
@@ -84,11 +79,7 @@ class SalesController extends Controller
         $result = DB::select($sqlQuery2, [$sales_id]);
         $data2 = json_encode($result);
         $data2 = json_decode($data2, true);   //store data in array
-        // if(empty($data2) == false){
-        //     $data2 = $data2[0];
-        // }
         $data = array($data, $data2);
-        $data['product_list'] = $this->getProductList();
         
         // return view('sales.index', ['data' => $data,'product_list' => $product_list]);        
         return $data;
@@ -99,78 +90,90 @@ class SalesController extends Controller
     }
     public function getSalesEdit($sales_id){
         $data = $this->getSalesDetails($sales_id);
+        $data['product_list'] = $this->getAllProductsId_n_Name();
         return view('sales.index', ['data' => $data]);
     }
-    public function editHelper($sales_data){
-        $dynamic_query = "";        
-        $flag = 0;
-        $arr = array();
-        if($sales_data['paid'] != null){
-            $dynamic_query .= editHelper2($flag, "paid");
-            array_push($arr, $sales_data['paid']);
-            $flag = 1;
-        }
-        else if($sales_data['customer_name'] != null){
-            $dynamic_query .= editHelper2($flag, "customer_name");
-            array_push($arr, $sales_data['customer_name']);
-            $flag = 1;
-        }
-        else if($sales_data['customer_mobile'] != null){
-            $dynamic_query .= editHelper2($flag, "customer_mobile");
-            array_push($arr, $sales_data['customer_mobile']);
-            $flag = 1;
-        }
-        else if($sales_data['customer_address'] != null){
-            $dynamic_query .= editHelper2($flag, "customer_address");
-            array_push($arr, $sales_data['customer_address']);
-            $flag = 1;
-        }
-        $dynamic_query .= "WHERE id = ?;";
-        $result = array($dynamic_query, $arr);
-        return $result;
-    }
-    public function editHelper2($flag, $field_name){
-        $statement = "";
-        if($flag == 0){
-            $statement .= "UPDATE sales
-                            SET ";
-        }
-        else if($flag == 1){
-            $statement .= ",";
-        }
-        $statement .= $field_name ." = ?";
-        return $statement;
-    }
+
+    // public function editHelper($sales_data){
+    //     $dynamic_query = "";        
+    //     $flag = 0;
+    //     $arr = array();
+    //     if($sales_data['paid'] != null){
+    //         $dynamic_query .= editHelper2($flag, "paid");
+    //         array_push($arr, $sales_data['paid']);
+    //         $flag = 1;
+    //     }
+    //     else if($sales_data['customer_name'] != null){
+    //         $dynamic_query .= editHelper2($flag, "customer_name");
+    //         array_push($arr, $sales_data['customer_name']);
+    //         $flag = 1;
+    //     }
+    //     else if($sales_data['customer_mobile'] != null){
+    //         $dynamic_query .= editHelper2($flag, "customer_mobile");
+    //         array_push($arr, $sales_data['customer_mobile']);
+    //         $flag = 1;
+    //     }
+    //     else if($sales_data['customer_address'] != null){
+    //         $dynamic_query .= editHelper2($flag, "customer_address");
+    //         array_push($arr, $sales_data['customer_address']);
+    //         $flag = 1;
+    //     }
+    //     $dynamic_query .= "WHERE id = ?;";
+    //     $result = array($dynamic_query, $arr);
+    //     return $result;
+    // }
+    // public function editHelper2($flag, $field_name){
+    //     $statement = "";
+    //     if($flag == 0){
+    //         $statement .= "UPDATE sales
+    //                         SET ";
+    //     }
+    //     else if($flag == 1){
+    //         $statement .= ",";
+    //     }
+    //     $statement .= $field_name ." = ?";
+    //     return $statement;
+    // }
+
     public function edit(Request $request){
         $sales_id = (int)$request->sales_id;
-        $sales_data = $data['sales_data'];
-        $sales_items = $sales_data['sales_items'];
-        $result = editHelper($sales_data);
-        $sqlQuery = $result[0];
-        $placeHolderData = $result[1];
-        
-        array_push($placeHolderData, $sales_id);
+        $data = $request->data;
+        $data = json_decode($data, true);
+        $sales_items = $data['sales_items'];
+       
+        $sqlQuery = "Update Sales
+                        set paid = ?,
+                            customer_name = ?,
+                            customer_phone = ?,
+                            customer_address = ?
+                    WHERE id = ?";
         DB::beginTransaction();
         try{ 
-            // check for new updates for sales table
-            if(empty($sqlQuery) == false){
-                $affected = DB::update($sqlQuery, $placeHolderData);
-            }            
-            foreach ($sales_items as $value){
-                $sqlQuery2 = "DELETE 
+                $affected = DB::update($sqlQuery, [$data['paid'],
+                                                    $data['customerName'],
+                                                    $data['customerPhone'],
+                                                    $data['customerAddress'],
+                                                    $sales_id ]);
+            $sqlQuery2 = "DELETE 
                     FROM Sales_items
-                    WHERE sales_id = ? AND product_id = ?";
-                DB::delete($sqlQuery2, [$sales_id, $value]);               
-            }
-            DB::commit();
+                    WHERE sales_id = ?";
+            DB::delete($sqlQuery2, [$sales_id]);
+            foreach ($sales_items as $value){
+                $sqlQuery3 = "INSERT INTO Sales_items (sales_id, product_id, sales_price, qt)
+                                values(?, ?, ?, ?)";
+                DB::insert($sqlQuery3, [$sales_id, $value['product_id'], $value['price'], $value['qt'] ]);               
+            }            
+            DB::commit();            
         }
         catch(Exception $e)
         {
             DB::rollback();
             $errorCode = $e->errorInfo[1];                     
             return $e;
-        }        
-        return back()->with('status', 'Data successfully updated');
+        }
+        // return back()->with('status', 'Data successfully updated');
+        // return response('status', 'Data successfully updated');
+        return ("Data successfully updated");
     }
     public function delete($sales_id){
         $sqlQuery = "DELETE 

@@ -35,8 +35,9 @@
     <div class="col-xs-12">
         <div class="box box-default">
             <div class="box-header with-border">Sales Items
-            </div>
+            </div>            
             <div class="box-body">
+                @if(Route::current()->getName() != 'salesView')
                 <div class="row">
                     <div class="col-xs-4">
                         <div class="form-group">
@@ -66,13 +67,13 @@
                             <label>Total</label>
                             <label type="text" id='product_total' class="form-control" placeholder="Total">
                         </div>
-                    </div>
+                    </div>                    
                     <div class="col-xs-2">
                         <button type="button" id ="addRow" class="btn btn-success mb-1" ><i class="fa fa-plus"></i></button>                    
                         <button id ="clearbt">clear all</button>
                     </div>
-
                 </div>
+                @endif
                 <table id="sales_table" class="table table-bordered">
                     <thead>
                         <tr>
@@ -80,19 +81,23 @@
                             <th width="15%">Price</th>
                             <th width="10%">Quantity</th>
                             <th width="20%">Total</th>
+                            @if(Route::current()->getName() != 'salesView')
                             <th width="1%">Action</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
-                    @if(@isset($data[1]))
                     <?php $total =0;?>
+                    @if(@isset($data[1]))            
                     @foreach($data[1] as $value)
                         <tr>
                             <td>{{$value['name']}}</td>
                             <td>{{$value['sales_price']}}</td>
                             <td>{{$value['qt']}}</td>
                             <td>{{$value['sales_price']*$value['qt']}}</td>
+                            @if(Route::current()->getName() != 'salesView')
                             <td><button id="{{$value['product_id']}}" class = "deletebt"><i class="fa fa-fw fa-trash"></i></button></td>
+                            @endif
                         </tr>
                         <?php $total += $value['sales_price'] * $value['qt'];?>
                     @endforeach
@@ -132,7 +137,7 @@
                 @if(Route::current()->getName() == 'salesView')
                     
                 @elseif(Route::current()->getName() == 'salesEdit')
-                    <button class="pull-right" id ="createbt">Update</button>
+                    <button class="pull-right" id ="updatebt" value ="{{$data[0]['id']}}">Update</button>
                 @else
                     <button class="pull-right" id ="createbt">Create</button>
                 @endif
@@ -141,124 +146,152 @@
         </div>
     </div>
 </div>
-<p>{{Route::current()->getName()}}<p>
 @endsection
 @section('script_area')
 <script>
-    let netTotal = 0;
-    $("#addRow").click(function(){
-        let item_ref = $(".select2 :selected");
-        let product_id = item_ref.attr("id");
-        let name = item_ref.text();
-        let price = $("#product_price").val();
-        let qt = $("#product_qt").val();
-        let total = $("#product_total").text();
-        //checking valid inputs
-        if(product_id != null && name != null && price != null && qt != null && total != null){
-            var row = '<tr>'+
-                  '<td id="'+product_id+'">'+name+'</td>'+
-                  '<td>'+price+'</td>'+
-                  '<td>'+qt+'</td>'+
-                  '<td>'+total+'</td>'+
-                  '<td> <button id="'+product_id+'" class='+'"deletebt"'+'><i class="fa fa-fw fa-trash"></i></button></td></tr>';
-            $("#sales_table tbody").append(row);   // add new item in table             
-            updateSalesSummary();
-        }        
-  	    
-    });
-
-    //auto update due amount in each input in paid field
-    document.getElementById("inputPaid").oninput = function(){
-        let due = netTotal - Number($("#inputPaid").val() );
-        $("#due").text(due);       
-    };
-
-    $("#createbt").click(function(){
-        var jsonObject = new Object();
-        jsonObject["customerName"] = $("#customerName").val();
-        jsonObject["customerPhone"] = $("#customerPhone").val();
-        jsonObject["customerAddress"] = $("#customerAddress").val();
-        jsonObject["paid"] = Number($("#inputPaid").val());
-        let btName = $(this).text();
-            // if(btName = 'create')
-        var sales_items = new Array();
-        $("#sales_table tbody tr").each(function(){
-            let row = $(this).find("td");            
-            let product_id = Number(row.attr("id"));
-            let price = Number(row[1].textContent);
-            let qt = Number(row[2].textContent);
-            sales_items.push({
-                "product_id": product_id,
-                "price": price,
-                "qt": qt
-            });            
-        });        
-        jsonObject['sales_items']= sales_items;
-        $.post("{{ route('createSales') }}", {data: JSON.stringify(jsonObject) } , function(data){                 
-                if(data.success)
+    $( document ).ready(function() {
+        let netTotal = 0;
+        $("#addRow").click(function(){        
+            let item_ref = $(".select2 :selected");
+            let product_id = item_ref.attr("id");
+            let name = item_ref.text();
+            let price = $("#product_price").val();
+            let qt = Number($("#product_qt").val());
+            let total = $("#product_total").text();        
+            //checking valid inputs
+            if(product_id != null && name != null && price != null && qt != null && total != null){
+                let flag = true;
+                $("#sales_table tbody tr").each(function(){                
+                    let oldProduct_id = $(this).find("td button").attr("id");
+                    if(product_id == oldProduct_id){
+                        qt = Number($(this).find("td")[2].textContent) + qt;
+                        $(this).find("td")[2].textContent = qt;
+                        flag = false;
+                    }              
+                });
+                if(flag)
                 {
-                    // console.log(data); 
-                }                    
-            });         
-        // delete all rows        
-        $("#sales_table > tbody").empty();
-    });
-    $("#sales_table tbody").on("click", ".deletebt", function() {
-        // deleted_product_ids.push($(this).attr('id'));
-        //remove specific item(i.e row) from table
-        $(this).closest("tr").remove();
-        updateSalesSummary();
-    });
-    
-    $("#clearbt").click(function(){
-        // delete all rows
-        $("#sales_table > tbody").empty();
-        updateSalesSummary();
-    });
+                    let row = '<tr>'+
+                        '<td>'+name+'</td>'+
+                        '<td>'+price+'</td>'+
+                        '<td>'+qt+'</td>'+
+                        '<td>'+total+'</td>'+
+                        '<td> <button id="'+product_id+'" class='+'"deletebt"'+'><i class="fa fa-fw fa-trash"></i></button></td></tr>';
+                    $("#sales_table tbody").append(row);   // add new item in table 
+                }
+                updateSalesSummary();
+            }          	    
+        });   
 
-    $("select option").click(function(){
-        // add items in dropdown list
-        let product_id = $(this).attr("id");
-        $.ajax({
-            url: "{{ route('product_details', [':product_id']) }}".replace(':product_id', product_id),
-            method: 'GET',
-            success: function(response) {
-                let price = Number(response['price']);
-                let qt = Number(response['qt']);
-                let total = price*qt;
-                $("#product_price").val(price);
-                $("#product_qt").val(qt);
-                $("#product_total").text(total);
-            }
+        $("#createbt").click(function(){
+            var jsonObject = getSalesData();
+            $.post("{{ route('createSales') }}", {data: JSON.stringify(jsonObject) } , function(data){ 
+                console.log(data);                
+                    if(data.success)
+                    {
+                        // console.log(data); 
+                    }                    
+                });         
+            // delete all rows        
+            $("#sales_table > tbody").empty();
+        });
+        
+        function getSalesData(){
+            let jsonObject = new Object();
+            jsonObject["customerName"] = $("#customerName").val();
+            jsonObject["customerPhone"] = Number($("#customerPhone").val());
+            jsonObject["customerAddress"] = $("#customerAddress").val();
+            jsonObject["paid"] = Number($("#inputPaid").val());
+            var sales_items = new Array();
+            $("#sales_table tbody tr").each(function(){
+                let row = $(this).find("td");            
+                let product_id = Number($(this).find("td button").attr("id"));
+                let price = Number(row[1].textContent);
+                let qt = Number(row[2].textContent);
+                sales_items.push({
+                    "product_id": product_id,
+                    "price": price,
+                    "qt": qt
+                });            
+            });        
+            jsonObject['sales_items']= sales_items;
+            return jsonObject;
+        }
+        
+        $("#updatebt").click(function(){
+            let jsonObject = getSalesData();
+            let sales_id = $(this).attr("value");
+            $.ajax({
+                url: "{{ route('salesUpdate', [':sales_id']) }}".replace(':sales_id', sales_id),
+                method: 'PUT',
+                data: {data: JSON.stringify(jsonObject) },
+                success: function(response) {
+                    // console.log(response);
+                }
+            });
         });
 
-        // $("select .select2").text("test");
-    });
-
-    function updateSalesSummary(){
-        netTotal = 0;        
-        $("#sales_table tbody tr").each(function(){            
-            netTotal = netTotal + Number($(this).find("td")[3].textContent);
+        //delete specific row from table using dynamically created 'delete button'
+        $("#sales_table tbody").on("click", ".deletebt", function() {
+            //remove specific item(i.e row) from table
+            $(this).closest("tr").remove();
+            updateSalesSummary();
         });
-        $("#netTotal").text(netTotal);
-        $("#inputPaid").text(0);
-        let due = netTotal - Number($("#inputDue").text());
-        $("#due").text(due);
-    }
+        
+        //clear all data from tables
+        $("#clearbt").click(function(){
+            // delete all rows
+            $("#sales_table > tbody").empty();
+            updateSalesSummary();
+        });
 
-    //auto update total amount before adding to table
-    document.getElementById("product_price").oninput = function(){
-        let price = $(this).val();
-        let qt = $("#product_qt").val();
-        $("#product_total").text(price*qt);
-    };
-    //auto update total amount before adding to table
-    document.getElementById("product_qt").oninput = function(){
-        let price = $("#product_price").val();
-        let qt = $(this).val();
-        $("#product_total").text(price*qt);
-    };
+        // products drop down menu's click event
+        $("select option").click(function(){
+            // add items in dropdown list
+            let product_id = $(this).attr("id");
+            $.ajax({
+                url: "{{ route('product_details', [':product_id']) }}".replace(':product_id', product_id),
+                method: 'GET',
+                success: function(response) {
+                    let price = Number(response['price']);
+                    let qt = Number(response['qt']);
+                    let total = price*qt;
+                    $("#product_price").val(price);
+                    $("#product_qt").val(qt);
+                    $("#product_total").text(total);
+                }
+            });
+        });
 
+        function updateSalesSummary(){
+            netTotal = 0;        
+            $("#sales_table tbody tr").each(function(){            
+                netTotal = netTotal + Number($(this).find("td")[3].textContent);
+            });
+            $("#netTotal").text(netTotal);
+            $("#inputPaid").text(0);
+            let due = netTotal - Number($("#inputDue").text());
+            $("#due").text(due);
+        }
+
+        //auto update total amount before adding to table
+        document.getElementById("product_price").oninput = function(){
+            let price = $(this).val();
+            let qt = $("#product_qt").val();
+            $("#product_total").text(price*qt);
+        };
+        //auto update total amount before adding to table
+        document.getElementById("product_qt").oninput = function(){
+            let price = $("#product_price").val();
+            let qt = $(this).val();
+            $("#product_total").text(price*qt);
+        };
+        //auto update due amount in each input in paid field
+        document.getElementById("inputPaid").oninput = function(){
+            let due = netTotal - Number($("#inputPaid").val() );
+            $("#due").text(due);       
+        };
+    });
 </script>
 
 @endsection
