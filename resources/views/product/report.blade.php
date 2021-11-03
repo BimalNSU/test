@@ -25,25 +25,31 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Item</th>
-                        <th>price</th>
-                        <th>Quantity</th>
-                        <th>action</th>
+                        <th width = "20%">Item</th>
+                        <th width = "10%">price</th>
+                        <th width = "10%">Quantity</th>
+                        <th width = "2%">action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>pizza</td>
-                        <td>300</td>
-                        <td>2</td>
-                        <td>bt</td>
-                    </tr>
-                    <tr>
-                        <td>pizza2</td>
-                        <td>200</td>
-                        <td>4</td>
-                        <td>bt</td>
-                    </tr>                   
+                    @foreach($data as $value)
+                        <tr>                                
+                            <td>{{$value['name']}}</td>
+                            <td>{{$value['price']}}</td>
+                            <td>{{$value['qt']}}</td>                            
+                            <td>
+                                <a href="{{route('productView',$value['id'])}}">
+                                    <span><i class="fa fa-fw fa-eye"></i><span>
+                                </a>
+                                <a href="{{route('productEdit',$value['id'])}}">
+                                    <i class="fa fa-fw fa-edit"></i>
+                                </a>
+                                <a href="" id="deletebt" value="{{$value['id']}}">
+                                    <i class="fa fa-fw fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach                           
                 </tbody>
             </table>
         </div>
