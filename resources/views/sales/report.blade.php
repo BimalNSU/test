@@ -54,13 +54,14 @@
     $("#deletebt").click(function(){
         // add items in dropdown list
         let sales_id = $(this).attr("value");
+        let row = $(this).closest('tr');
         $.ajax({
             url: "{{ route('salesDelete', ['sales_id' => '']) }}/" + sales_id,
             // url: "{{ route('salesDelete', [':sales_id']) }}".replace(':sales_id', sales_id),
             method: 'DELETE',
             success: function(response) {
                 alert(response.success);
-                location.reload(); // do page refresh
+                row.remove();   // remove selected row from current html page
             }
         });
 
