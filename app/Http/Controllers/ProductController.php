@@ -66,7 +66,7 @@ class ProductController extends Controller
             $errorCode = $e->errorInfo[1];         
             return $e;
         }
-        return response()->json(['response' => 'Delete successfully']);
+        return response()->json(['success' => 'Delete successfully']);
     }
 
 }

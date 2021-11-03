@@ -44,9 +44,9 @@
                                 <a href="{{route('productEdit',$value['id'])}}">
                                     <i class="fa fa-fw fa-edit"></i>
                                 </a>
-                                <a href="" id="deletebt" value="{{$value['id']}}">
+                                <span class="deletebt" value="{{$value['id']}}">
                                     <i class="fa fa-fw fa-trash"></i>
-                                </a>
+                                </span>
                             </td>
                         </tr>
                     @endforeach                           
@@ -58,5 +58,18 @@
 @endsection
 
 @section('script_area')
-
+<script>
+    $(".deletebt").click(function(){
+        let product_id = $(this).attr("value");        
+        let row = $(this).closest('tr');
+        $.ajax({
+            url: "{{ route('productDelete', ['product_id' => '']) }}/" + product_id,
+            method: 'DELETE',
+            success: function(data) {
+                alert(data.success);
+                row.remove();   // remove selected row from current html page
+            }
+        });
+    });
+</script>
 @endsection
