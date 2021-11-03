@@ -78,7 +78,7 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="active"><a href="{{url('/')}}"><i class="fa fa-circle-o"></i> Sales Create</a></li>
+            <li class="active"><a href="{{url('sales/create')}}"><i class="fa fa-circle-o"></i> Sales Create</a></li>
             <li><a href="{{url('sales/')}}"><i class="fa fa-circle-o"></i> Sales List</a></li>
           </ul>
         </li>

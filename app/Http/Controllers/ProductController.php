@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    public function createPage(){
+    public function index(){
         return view('product.index');
     }
     public function editPage($product_id){

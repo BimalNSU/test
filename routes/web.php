@@ -15,20 +15,25 @@
 //     return view('welcome');
 // });
 
-Route::get('/','SalesController@index');
-Route::get('sales/','SalesController@getSalesList');
-// Route::get('sales/{sales_id}','SalesController@details');
-Route::get('sales/{sales_id}/view','SalesController@getSalesView')->name('salesView');
-Route::get('sales/{sales_id}/edit','SalesController@getSalesEdit')->name('salesEdit');
-Route::POST('sales/','SalesController@create')->name('createSales');
-Route::PUT('sales/{sales_id}','SalesController@edit')->name('salesUpdate');
-Route::DELETE('sales/{sales_id}','SalesController@delete')->name('salesDelete');
 
-Route::POST('products/','ProductController@create');             // rest api
-Route::POST('products/create','ProductController@createPage');  // web api
-Route::get('products/','ProductController@getProductList');     // web & rest api
-Route::get('product/{product_id}','ProductController@details')->name('product_details');     // rest api
-Route::get('products/{product_id}/view','ProductController@details')->name('productView');   //web api
-Route::get('products/{product_id}/edit','ProductController@editPage')->name('productEdit');  //web api
-Route::PUT('products/{product_id}','ProductController@update')->name('productUpdate');      // rest api
-Route::DELETE('products/{product_id}','ProductController@delete')->name('productDelete');   // rest api
+Route::group(['prefix' => 'sales'],function () {
+    Route::get('create','SalesController@index');                // web api
+    Route::get('/','SalesController@getSalesList');              // web & rest api
+    Route::POST('/','SalesController@create');                  // rest api
+    // Route::get('{sales_id}','SalesController@details');      // rest api
+    Route::get('{sales_id}/view','SalesController@getSalesView')->name('salesView');  // web api
+    Route::get('{sales_id}/edit','SalesController@getSalesEdit')->name('salesEdit');  // web api
+    Route::PUT('{sales_id}','SalesController@edit')->name('salesUpdate');             // rest api
+    Route::DELETE('{sales_id}','SalesController@delete')->name('salesDelete');        // rest api
+});
+
+Route::group(['prefix' => 'products'],function () {
+    Route::get('create','ProductController@index');          // web api
+    Route::get('/','ProductController@getProductList');     // web & rest api
+    Route::POST('/','ProductController@create');            // rest api
+    Route::get('{product_id}','ProductController@details')->name('product_details');     // rest api
+    Route::get('{product_id}/view','ProductController@details')->name('productView');   //web api
+    Route::get('{product_id}/edit','ProductController@editPage')->name('productEdit');  //web api
+    Route::PUT('{product_id}','ProductController@update')->name('productUpdate');      // rest api
+    Route::DELETE('{product_id}','ProductController@delete')->name('productDelete');   // rest api
+});

@@ -185,7 +185,7 @@
 
         $("#createbt").click(function(){
             var jsonObject = getSalesData();
-            $.post("{{ route('createSales') }}", {data: JSON.stringify(jsonObject) } , function(data){ 
+            $.post("{{ url('sales/') }}", {data: JSON.stringify(jsonObject) } , function(data){ 
                 console.log(data);                
                     if(data.success)
                     {
