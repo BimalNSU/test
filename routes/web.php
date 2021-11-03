@@ -20,7 +20,7 @@ Route::get('sales/','SalesController@getSalesList');
 Route::get('sales/{sales_id}','SalesController@getSalesView')->name('salesView');
 Route::get('sales/{sales_id}/edit','SalesController@getSalesEdit')->name('salesEdit');
 Route::POST('sales/','SalesController@create')->name('createSales');
-Route::PUT('sales/{sales_id}','SalesController@update')->name('salesUpdate');
+Route::PUT('sales/{sales_id}','SalesController@edit')->name('salesUpdate');
 Route::DELETE('sales/{sales_id}','SalesController@delete')->name('salesDelete');
 
 Route::POST('products/','ProductController@create')->name('createProduct');
