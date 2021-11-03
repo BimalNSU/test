@@ -49,6 +49,8 @@ class SalesController extends Controller
             $errorCode = $e->errorInfo[1];                
             return $e;
         }
+        // return redirect()->back()->with('success', 'IT WORKS!');
+        return response()->json(['success' => 'Data is created successfully.']);
     }
     public function getSalesList(){
         $sqlQuery = "SELECT i.sales_id, s.customer_name customer, s.customer_phone phone, s.customer_address address, 
@@ -173,7 +175,7 @@ class SalesController extends Controller
         }
         // return back()->with('status', 'Data successfully updated');
         // return response('status', 'Data successfully updated');
-        return ("Data successfully updated");
+        return response()->json(['success' => 'Sale id ' . $sales_id . ' is updated successfully.']);
     }
     public function delete($sales_id){
         $sqlQuery = "DELETE 
@@ -190,6 +192,6 @@ class SalesController extends Controller
             $errorCode = $e->errorInfo[1];         
             return $e;
         }
-        return response()->json(['response' => 'Delete successfully']);
+        return response()->json(['success' => 'Data is deleted successfully']);
     }
 }

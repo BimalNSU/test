@@ -36,9 +36,9 @@
                                     <a href="{{route('salesEdit',$value['sales_id'])}}">
                                         <i class="fa fa-fw fa-edit"></i>
                                     </a>
-                                    <a href="" id="deletebt" value="{{$value['sales_id']}}">
+                                    <span type="button" href="" id="deletebt" value="{{$value['sales_id']}}">
                                         <i class="fa fa-fw fa-trash"></i>
-                                    </a>
+                                    <span>
                                 </td>
                             </tr>
                         @endforeach              
@@ -53,13 +53,14 @@
 <script>
     $("#deletebt").click(function(){
         // add items in dropdown list
-        let sales_id = $(this).attr("value");        
+        let sales_id = $(this).attr("value");
         $.ajax({
             url: "{{ route('salesDelete', ['sales_id' => '']) }}/" + sales_id,
             // url: "{{ route('salesDelete', [':sales_id']) }}".replace(':sales_id', sales_id),
             method: 'DELETE',
             success: function(response) {
-                alert(response);
+                alert(response.success);
+                location.reload(); // do page refresh
             }
         });
 

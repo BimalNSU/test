@@ -186,10 +186,10 @@
         $("#createbt").click(function(){
             var jsonObject = getSalesData();
             $.post("{{ url('sales/') }}", {data: JSON.stringify(jsonObject) } , function(data){ 
-                console.log(data);                
-                    if(data.success)
+                // console.log(data);                
+                    if(data)
                     {
-                        // console.log(data); 
+                        alert(data.success); 
                     }                    
                 });         
             // delete all rows        
@@ -225,8 +225,8 @@
                 url: "{{ route('salesUpdate', [':sales_id']) }}".replace(':sales_id', sales_id),
                 method: 'PUT',
                 data: {data: JSON.stringify(jsonObject) },
-                success: function(response) {
-                    // console.log(response);
+                success: function(data) {
+                    alert(data.success);
                 }
             });
         });
