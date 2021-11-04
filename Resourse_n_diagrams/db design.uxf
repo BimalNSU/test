@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>8</x>
+      <y>168</y>
+      <w>240</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>Sales
+--
+id: BIGINT unsigned AUTO_INCREMENT,
+paid: Decimal(10,2) NOT NULL,
+customer_name: varchar(15) not null,
+customer_phone: int(10) unsigned NOT NULL,
+customer_address: varchar(30) NOT NULL,
+primary key(id) 
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>368</x>
+      <y>168</y>
+      <w>224</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>Products
+--
+id: smallint unsigned AUTO_INCREMENT,
+name: varchar(20) NOT NULL,
+price: decimal(10,2) NOT NULL,
+qt: mediumint unsigned NOT NULL,
+Primary key(id)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>200</x>
+      <y>288</y>
+      <w>208</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>Sales_items
+--
+sales_id: BIGINT unsigned not null (fk)
+product_id: smallint not null (fk),
+sales_price: decimal(10,2) NOT NULL,
+qt: mediumint unsigned not null,
+UNIQUE(sales_id, product_id)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>296</x>
+      <y>168</y>
+      <w>24</w>
+      <h>136</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>240</x>
+      <y>160</y>
+      <w>144</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1..n
+m2=0..n
+&lt; </panel_attributes>
+    <additional_attributes>160.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+</diagram>
