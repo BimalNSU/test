@@ -36,7 +36,7 @@
                                     <a href="{{route('salesEdit',$value['sales_id'])}}">
                                         <i class="fa fa-fw fa-edit"></i>
                                     </a>
-                                    <span type="button" href="" id="deletebt" value="{{$value['sales_id']}}">
+                                    <span class="deletebt" value="{{$value['sales_id']}}">
                                         <i class="fa fa-fw fa-trash"></i>
                                     <span>
                                 </td>
@@ -51,7 +51,7 @@
 @endsection
 @section('script_area')
 <script>
-    $("#deletebt").click(function(){
+    $(".deletebt").click(function(){
         // add items in dropdown list
         let sales_id = $(this).attr("value");
         let row = $(this).closest('tr');
