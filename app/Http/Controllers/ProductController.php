@@ -4,11 +4,49 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
     public function index(){
         return view('product.index');
+    }
+
+    public function create(Request $request){
+        $rules = array(
+            'name' => 'required|string|max:20',
+            'price' => 'required',
+            'qt' => 'required|int'
+        );
+
+        // getting json data
+        $data = $request->all();
+        $error = Validator::make($request->all(), $rules);
+        if($error->fails())
+        {
+            return back()->with('errors', $error->errors()->all());
+        }
+
+        //extracting json data
+        $product_name = $data['name'];
+        $price = (float)$data['price'];
+        $qt = (int)$data['qt'];
+        $sqlQuery = "INSERT INTO Products (name,price,qt)
+                    VALUES('$product_name',$price,$qt);";
+        try{
+            DB::insert($sqlQuery);
+            // return response()->json(['success' => 'Data Added successfully.']);
+            return back()->with('success','Data Added successfully.');
+        }
+        catch(Exception $e)
+        {
+            $errorCode = $e->errorInfo[1];
+            if($errorCode == 1062)
+            {
+                return "duplicate data insertion error";
+            }
+            return $e;
+        }       
     }
     public function editPage($product_id){
         $data = $this->details($product_id);
