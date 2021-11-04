@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  {{-- <title>Home page</title> --}}
   <title>@yield('title_area')</title>
   
   <!-- Tell the browser to be responsive to screen width -->
@@ -138,7 +137,7 @@
 <!-- AdminLTE App -->
 <script src="{{ asset('FrontEnd') }}/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="{{ asset('FrontEnd') }}/dist/js/demo.js"></script>
+<!-- <script src="{{ asset('FrontEnd') }}/dist/js/demo.js"></script> -->
 <script>
   $(document).ready(function () {
     $('.sidebar-menu').tree()
