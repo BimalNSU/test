@@ -35,7 +35,7 @@
 
   <header class="main-header">
     <!-- Logo -->
-    <a href="{{ asset('FrontEnd') }}/index2.html" class="logo">
+    <a href="{{ url('/')}}" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>A</b>1</span>
       <!-- logo for regular state and mobile devices -->
@@ -137,7 +137,7 @@
 <!-- AdminLTE App -->
 <script src="{{ asset('FrontEnd') }}/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
-<!-- <script src="{{ asset('FrontEnd') }}/dist/js/demo.js"></script> -->
+<script src="{{ asset('FrontEnd') }}/dist/js/demo.js"></script>
 <script>
   $(document).ready(function () {
     $('.sidebar-menu').tree()
