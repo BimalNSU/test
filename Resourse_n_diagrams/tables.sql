@@ -1,7 +1,3 @@
-drop table Sales_items;
-drop table Sales;
-drop table products;
-
 create table Products (
     id smallint unsigned AUTO_INCREMENT,
     name varchar(20) NOT NULL,
