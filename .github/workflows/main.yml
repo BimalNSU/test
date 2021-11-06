@@ -15,5 +15,5 @@ jobs:
       with:
         server: smart2009.com
         username: bimal@smart2009.com
-        password: 1111
-        local-dir: testfolder1/
+        password: ${{ secrets.password }}
+        server-dir: testfolder1/
