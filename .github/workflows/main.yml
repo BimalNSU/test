@@ -15,4 +15,4 @@ jobs:
       with:
         server: smart2009.com
         username: bimal@smart2009.com
-        password: ${{ secrets.FTP_PASSWORD }}
+        password: secrets.FTP_PASSWORD
