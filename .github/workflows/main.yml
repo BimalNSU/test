@@ -15,4 +15,5 @@ jobs:
       with:
         server: smart2009.com
         username: bimal@smart2009.com
-        password: secrets.FTP_PASSWORD
+        password: 1111
+        local-dir: testfolder1
