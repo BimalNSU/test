@@ -53,19 +53,19 @@
                     <div class="col-xs-2">
                         <div class="form-group">
                             <label>Price</label>
-                            <input type="text" id='product_price' class="form-control" placeholder="Price">
+                            <input type="number" id='product_price' class="form-control" placeholder="Price">
                         </div>
                     </div>
                     <div class="col-xs-2">
                         <div class="form-group">
                             <label>Quantity</label>
-                            <input type="text" id='product_qt' class="form-control" placeholder="Quantity">
+                            <input type="number" id='product_qt' class="form-control" placeholder="Quantity">
                         </div>
                     </div>
                     <div class="col-xs-2">
                         <div class="form-group">
                             <label>Total</label>
-                            <label type="text" id='product_total' class="form-control" placeholder="Total">
+                            <label type="number" id='product_total' class="form-control" placeholder="Total">
                         </div>
                     </div>                    
                     <div class="col-xs-2">
@@ -159,7 +159,7 @@
             let qt = Number($("#product_qt").val());
             let total = $("#product_total").text();        
             //checking valid inputs
-            if(product_id != null && name != null && price != null && qt != null && total != null){
+            if(product_id != null && name != null && price > 0 && qt > 0 && total > 0){
                 let flag = true;
                 $("#sales_table tbody tr").each(function(){                
                     let oldProduct_id = $(this).find("td button").attr("id");
@@ -275,17 +275,14 @@
         }
 
         //auto update total amount before adding to table
-        document.getElementById("product_price").oninput = function(){
-            let price = $(this).val();
+        document.getElementById("product_price").oninput = updateProductTotal;
+        //auto update total amount before adding to table
+        document.getElementById("product_qt").oninput = updateProductTotal;
+        function updateProductTotal(){
+            let price = $("#product_price").val();
             let qt = $("#product_qt").val();
             $("#product_total").text(price*qt);
-        };
-        //auto update total amount before adding to table
-        document.getElementById("product_qt").oninput = function(){
-            let price = $("#product_price").val();
-            let qt = $(this).val();
-            $("#product_total").text(price*qt);
-        };
+        }
         //auto update due amount in each input in paid field
         document.getElementById("inputPaid").oninput = function(){
             let due = netTotal - Number($("#inputPaid").val() );
