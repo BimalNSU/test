@@ -13,7 +13,7 @@ jobs:
     - name: Ftp-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@4.1.0
       with:
-        server: smart2009.com
-        username: bimal@smart2009.com
-        password: ${{ secrets.PASSWORD }}
+        server: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
         server-dir: testfolder1/
