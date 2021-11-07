@@ -23,6 +23,7 @@ Task:
 
 - get: ``/``
 - get: ``sales/create``
+- get: ``sales/``
 - POST: ``sales/``
 - get: ``sales/{sales_id}/view``
 - get: ``sales/{sales_id}/edit``
