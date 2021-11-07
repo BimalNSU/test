@@ -164,8 +164,10 @@
                 $("#sales_table tbody tr").each(function(){                
                     let oldProduct_id = $(this).find("td button").attr("id");
                     if(product_id == oldProduct_id){
-                        qt = Number($(this).find("td")[2].textContent) + qt;
-                        $(this).find("td")[2].textContent = qt;
+                        let currentRow = $(this).find("td");
+                        qt = Number(currentRow[2].textContent) + qt;
+                        currentRow[2].textContent = qt;
+                        currentRow[3].textContent =  qt*Number(currentRow[1].textContent);
                         flag = false;
                     }              
                 });
