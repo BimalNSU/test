@@ -23,8 +23,8 @@ jobs:
         server-dir: ${{ secrets.FTP_FOLDER }}
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-    - name: composer install
-      run: composer install
+    - name: composer dump autoload
+      run: composer dump-autoload
     - name: Install Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Generate key
