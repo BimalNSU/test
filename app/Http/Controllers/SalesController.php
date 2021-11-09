@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\MyClass\Product;
 
 class SalesController extends Controller
@@ -21,8 +22,25 @@ class SalesController extends Controller
         return $data;
     }
     public function create(Request $request){
+        $rules = array(
+            'customerName' => 'required|string|max:15',
+            'customerPhone' => 'required|int|max:999999999',
+            'customerAddress' => 'required|string|max:30',                        
+            'paid'=> 'required|int',
+            'sales_items' => 'required|array'
+        );        
+        // getting encoded json data
         $data = $request->data;
-        $data = json_decode($data,true);
+        $data = json_decode($data, true);   
+        // return response()->json(['success'=> $data ]);
+        $error = Validator::make($data, $rules);
+        if($error->fails())
+        {
+            return response()->json(['error'=> $error->errors()->all() ]);
+        }     
+
+        // $data = $request->data;
+        // $data = json_decode($data,true);
         $paid = $data['paid'];
         $customer_name = $data['customerName'];
         $customer_phone = $data['customerPhone'];
@@ -152,6 +170,20 @@ class SalesController extends Controller
         $sales_id = (int)$request->sales_id;
         $data = $request->data;
         $data = json_decode($data, true);
+        $rules = array(
+            'customerName' => 'required|string|max:15',
+            'customerPhone' => 'required|int|max:999999999',
+            'customerAddress' => 'required|string|max:30',                        
+            'paid'=> 'required|int',
+            'sales_items' => 'required|array'
+        );        
+       
+        // return response()->json(['success'=> $data ]);
+        $error = Validator::make($data, $rules);
+        if($error->fails())
+        {
+            return response()->json(['error'=> $error->errors()->all() ]);
+        }     
         $sales_items = $data['sales_items'];
        
         $sqlQuery = "Update Sales

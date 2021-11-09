@@ -9,6 +9,7 @@
         <div class="box box-default">
             <div class="box-header with-border">Sales Header</div>
             <div class="box-body">
+                <span id="respond_result"></span>
                 <div class="form-group">
                     <label for="inputName" class="col-sm-2 control-label">Customer Name</label>
 
@@ -198,10 +199,18 @@
             var jsonObject = getSalesData();
             $.post("{{ url('sales/') }}", {data: JSON.stringify(jsonObject) } , function(data){ 
                 // console.log(data);                
-                    if(data)
-                    {
-                        alert(data.success); 
-                    }                    
+                if(data.success)
+                {
+                    html = '<div class="alert alert-success">' + data.success + '</div>';
+                }
+                else{
+                    html = '<div class="alert alert-danger">';
+                    data.error.forEach(function(item, index){
+                        html += '<p>' + item + '</p>';
+                    });
+                    html += '</div>';
+                }
+                $('#respond_result').html(html);
                 });         
             // delete all rows        
             $("#sales_table > tbody").empty();
@@ -237,7 +246,19 @@
                 method: 'PUT',
                 data: {data: JSON.stringify(jsonObject) },
                 success: function(data) {
-                    alert(data.success);
+                    let html="";
+                    // console.log($data);
+                    if(data.success){
+                        html = '<div class="alert alert-success">' + data.success + '</div>';
+                    }                    
+                    else{
+                        html = '<div class="alert alert-danger">';
+                        data.error.forEach(function(item, index){
+                        html += '<p>' + item + '</p>';
+                        });
+                        html += '</div>';
+                    }
+                $('#respond_result').html(html);
                 }
             });
         });
