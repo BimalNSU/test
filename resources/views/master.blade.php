@@ -129,8 +129,6 @@
 <script src="{{ asset('FrontEnd') }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
 <!-- @yield('script_area') -->
-<!-- Select2 -->
-  <script src="{{ asset('FrontEnd') }}/bower_components/select2/dist/js/select2.full.min.js"></script>
 
 <!-- SlimScroll -->
 <script src="{{ asset('FrontEnd') }}/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>

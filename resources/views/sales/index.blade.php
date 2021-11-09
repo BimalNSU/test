@@ -156,11 +156,7 @@
     // $(document).ready(function() {
     // $(window).load(function(){
     // jQuery(document).ready(function(){
-    // document.addEventListener("DOMContentLoaded", function(event) {
-    $(function () {
-        //Initialize Select2 Elements
-        $('.select2').select2();
-    });    
+    // document.addEventListener("DOMContentLoaded", function(event) {   
     window.onload = function() {        
         let netTotal = 0;
         updateSalesSummary();
