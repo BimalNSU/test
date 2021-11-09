@@ -151,6 +151,7 @@
 <script>
     $( document ).ready(function() {
         let netTotal = 0;
+        updateSalesSummary();
         $("#addRow").click(function(){        
             let item_ref = $(".select2 :selected");
             let product_id = item_ref.attr("id");
