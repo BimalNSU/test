@@ -128,7 +128,9 @@
 <!-- Bootstrap 3.3.7 -->
 <script src="{{ asset('FrontEnd') }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
-@yield('script_area')
+<!-- @yield('script_area') -->
+<!-- Select2 -->
+  <script src="{{ asset('FrontEnd') }}/bower_components/select2/dist/js/select2.full.min.js"></script>
 
 <!-- SlimScroll -->
 <script src="{{ asset('FrontEnd') }}/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
@@ -138,6 +140,9 @@
 <script src="{{ asset('FrontEnd') }}/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('FrontEnd') }}/dist/js/demo.js"></script>
+
+@yield('script_area')
+
 <script>
   $(document).ready(function () {
     $('.sidebar-menu').tree()
@@ -152,6 +157,5 @@
     });
 
 </script>
-
 </body>
 </html>

@@ -1,5 +1,8 @@
 @extends('master')
-
+@section('style_area')
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ asset('FrontEnd') }}/bower_components/select2/dist/css/select2.min.css">
+@endsection    
 @section('content_area')
 <div class="row">
     <div class="col-xs-12">
@@ -147,9 +150,18 @@
     </div>
 </div>
 @endsection
+
 @section('script_area')
 <script>
-    $( document ).ready(function() {
+    // $(document).ready(function() {
+    // $(window).load(function(){
+    // jQuery(document).ready(function(){
+    // document.addEventListener("DOMContentLoaded", function(event) {
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2();
+    });    
+    window.onload = function() {        
         let netTotal = 0;
         updateSalesSummary();
         $("#addRow").click(function(){        
@@ -291,7 +303,7 @@
             let due = netTotal - Number($("#inputPaid").val() );
             $("#due").text(due);       
         };
-    });
+    };
 </script>
 
 @endsection
