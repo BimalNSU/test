@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\MyClass\Product;
 
 class SalesController extends Controller
 {
@@ -34,13 +35,23 @@ class SalesController extends Controller
             $result = DB::insert($sqlQuery,[$paid, $customer_name, $customer_phone, $customer_address]);
             $sales_id = DB::getPdo()->lastInsertId();
             $sales_items = $data['sales_items'];
-            foreach($sales_items as $values){
+            $product = new Product();
+            foreach($sales_items as $value){
                 $sqlQuery2 = "Insert into Sales_items (sales_id, product_id, sales_price, qt)
                         values(?,?,?,?)";
-                DB::insert($sqlQuery2, [$sales_id, 
-                                        $values['product_id'], 
-                                        $values['price'],
-                                        $values['qt'] ]);
+                $product_id = $value['product_id'];
+                $product_data = $product->getDetails($product_id);
+                $remainingQt = $product_data['qt'] - $value['qt'];                
+                if($remainingQt >= 0){
+                    $product->update(array("id"=>$value['product_id'], "qt"=>$remainingQt));
+                    DB::insert($sqlQuery2, [$sales_id, 
+                                            $value['product_id'], 
+                                            $value['price'],
+                                            $value['qt'] ]);
+                }
+                else{
+                    return response()->json(['success' => $product_data['name'].'available stock: '.$product_data['qt'] . ' Insufficient stock']);
+                }
             }
             DB::commit();
         }catch(Exception $e)
@@ -151,19 +162,22 @@ class SalesController extends Controller
                     WHERE id = ?";
         DB::beginTransaction();
         try{ 
-                $affected = DB::update($sqlQuery, [$data['paid'],
-                                                    $data['customerName'],
-                                                    $data['customerPhone'],
-                                                    $data['customerAddress'],
-                                                    $sales_id ]);
-            $sqlQuery2 = "DELETE 
+            $affected = DB::update($sqlQuery, [$data['paid'],
+                                                $data['customerName'],
+                                                $data['customerPhone'],
+                                                $data['customerAddress'],
+                                                $sales_id ]);
+            //update stock before updating sales items
+            //todo
+
+            $sqlQuery3 = "DELETE 
                     FROM Sales_items
                     WHERE sales_id = ?";
-            DB::delete($sqlQuery2, [$sales_id]);
+            DB::delete($sqlQuery3, [$sales_id]);
             foreach ($sales_items as $value){
-                $sqlQuery3 = "INSERT INTO Sales_items (sales_id, product_id, sales_price, qt)
+                $sqlQuery4 = "INSERT INTO Sales_items (sales_id, product_id, sales_price, qt)
                                 values(?, ?, ?, ?)";
-                DB::insert($sqlQuery3, [$sales_id, $value['product_id'], $value['price'], $value['qt'] ]);               
+                DB::insert($sqlQuery4, [$sales_id, $value['product_id'], $value['price'], $value['qt'] ]);               
             }            
             DB::commit();            
         }
