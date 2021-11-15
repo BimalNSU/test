@@ -33,10 +33,10 @@ Task:
 - get: ``products/create``
 - get: ``products/``
 - POST: ``products/``
-- get: ``product/{product_id}``
-- get: ``product/{product_id}/view``
-- get: ``product/{product_id}/edit``
-- PUT: ``product/{product_id}``
+- get: ``products/{product_id}``
+- get: ``products/{product_id}/view``
+- get: ``products/{product_id}/edit``
+- PUT: ``products/{product_id}``
 - DELETE: ``products/{product_id}``
 
 ## Demo pages:
